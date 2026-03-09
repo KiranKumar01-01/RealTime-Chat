@@ -19,6 +19,7 @@ const PORT=process.env.PORT||3000
 
 
 app.use(express.json()) //req.body
+//cors
 app.use(cors({
   origin: ENV.CLIENT_URL,
   credentials: true
