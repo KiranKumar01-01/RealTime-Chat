@@ -36,7 +36,7 @@ function ChatContainer() {
         unsubscribeFromMessages();
       }
     };
-  }, [selectedUser]);
+  }, [selectedUser,getMessagesByUserId,subscribeToMessages,unsubscribeFromMessages]);
 
   // ✅ AUTO SCROLL
   useEffect(() => {
@@ -51,6 +51,8 @@ function ChatContainer() {
       </div>
     );
   }
+
+  
 
   return (
     <>
