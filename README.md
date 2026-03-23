@@ -72,6 +72,7 @@ It enables users to communicate instantly with **secure authentication, real-tim
 - 📱 Fully Responsive Design
 - 🧑‍💻 Clean Git Workflow (PRs, branches)
 
+---
 
 
 🧠 How It Works (Detailed)
@@ -106,6 +107,7 @@ Step-by-step process:
   * Scalable for large applications
   * Fast authentication
 
+---
 
 
 ⚡ REAL-TIME MESSAGING (SOCKET.IO)
@@ -129,6 +131,7 @@ Working flow:
   * Bi-directional communication
   * Ultra-fast message delivery
 
+---
 
 
 🟢 PRESENCE SYSTEM (ONLINE / OFFLINE STATUS)
@@ -152,6 +155,8 @@ How it works:
 👉 Real-time sync ensures accuracy across all users
 
 
+---
+
 
 🔔 NOTIFICATIONS & SOUNDS
 
@@ -172,6 +177,8 @@ Implementation:
 
 👉 Improves UX similar to WhatsApp/Telegram behavior
 
+
+---
 
 
 📨 EMAIL INTEGRATION (RESEND API)
@@ -197,6 +204,9 @@ Flow:
   * Easy integration
 
 
+---
+
+
 🗂️ IMAGE UPLOAD FLOW (CLOUDINARY)
 
 Handles media sharing in chats.
@@ -218,6 +228,9 @@ Step-by-step:
   * No heavy storage on server
   * Fast CDN delivery
   * Optimized images
+
+
+---
 
 
 🚦 SECURITY & RATE LIMITING (ARCJET)
