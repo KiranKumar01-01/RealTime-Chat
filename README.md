@@ -144,7 +144,7 @@ How it works:
 3.When user disconnects:
   * Socket event disconnect is triggered
   * User is marked offline
-  * 
+    
 4.Frontend updates UI:
   * 🟢 Green dot → Online
   * ⚫ Grey → Offline
