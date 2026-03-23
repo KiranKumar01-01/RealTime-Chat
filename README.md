@@ -85,14 +85,17 @@ Step-by-step process:
   * User enters name, email, and password.
   * Password is hashed using bcrypt before storing in MongoDB.
   * This ensures even if the database is compromised, passwords remain secure.
+    
 2.Login Process
   * User submits email & password.
   * Backend compares entered password with hashed password using bcrypt.
   * If valid → a JWT token is generated.
+    
 3.Token Handling
   * JWT contains user ID and metadata.
   * Sent to frontend and stored (usually in cookies or localStorage).
   *Every request to protected routes includes this token.
+
 4.Protected Routes
   * Middleware verifies JWT before allowing access.
   * If token is invalid/expired → request is rejected.
