@@ -77,6 +77,7 @@ It enables users to communicate instantly with **secure authentication, real-tim
 🧠 How It Works (Detailed)
 
 🔐 AUTHENTICATION FLOW
+
 ** The authentication system is implemented using JWT (JSON Web Tokens) to ensure secure and stateless user sessions.
 
 Step-by-step process:
@@ -108,15 +109,19 @@ Step-by-step process:
 
 
 ⚡ REAL-TIME MESSAGING (SOCKET.IO)
+
 Real-time communication is handled using WebSockets via Socket.IO, allowing instant message delivery.
 
 Working flow:
 
 1.When user logs in → a socket connection is established.
+
 2.Each user gets a unique socket ID.
+
 3.When user sends a message:
   * Message is emitted using socket.emit()
   * Server receives and forwards it using socket.to(receiver).emit()
+    
 4.Receiver gets message instantly without refresh.
 
 👉 Key Advantage:
@@ -127,15 +132,19 @@ Working flow:
 
 
 🟢 PRESENCE SYSTEM (ONLINE / OFFLINE STATUS)
+
 This system tracks whether users are active in real time.
 
 How it works:
 1.When user connects → their socket ID is stored
+
 2.Backend maintains a list/map of:
   userId → socketId
+  
 3.When user disconnects:
   * Socket event disconnect is triggered
   * User is marked offline
+  * 
 4.Frontend updates UI:
   * 🟢 Green dot → Online
   * ⚫ Grey → Offline
@@ -145,15 +154,18 @@ How it works:
 
 
 🔔 NOTIFICATIONS & SOUNDS
+
 Enhances user experience with real-time alerts.
 
 Implementation:
 
 1.When a new message arrives:
   * Event is triggered from socket
+    
 2.Frontend:
   * Plays notification sound
   * Updates unread message count
+    
 3.Toggle Feature:
   * User can enable/disable sounds
   * Stored in state (Zustand or local storage)
@@ -163,14 +175,17 @@ Implementation:
 
 
 📨 EMAIL INTEGRATION (RESEND API)
+
 Automated email system for onboarding users.
 
 Flow:
 1.After successful signup:
   * Backend triggers Resend API
+    
 2.Sends:
   * Welcome email
   * Confirmation message
+    
 3.Email contains:
   * User name
   * App intro
@@ -183,14 +198,20 @@ Flow:
 
 
 🗂️ IMAGE UPLOAD FLOW (CLOUDINARY)
+
 Handles media sharing in chats.
 
 Step-by-step:
 1.User selects image
+
 2.Frontend sends file to backend
+
 3.Backend uploads image to Cloudinary
+
 4.Cloudinary returns a secure URL
+
 5.URL is stored in MongoDB
+
 6.Message contains image URL → displayed in chat
 
 👉 Benefits:
@@ -200,13 +221,16 @@ Step-by-step:
 
 
 🚦 SECURITY & RATE LIMITING (ARCJET)
+
 Prevents abuse and protects APIs.
 
 How it works:
 1.Every API request passes through Arcjet middleware
+
 2.It:
   * Tracks request frequency per user/IP
   * Blocks excessive requests
+    
 3.If limit exceeded:
   * Request is denied (429 Too Many Requests)
 
