@@ -33,7 +33,11 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: [ENV.CLIENT_URL],
+    origin: [
+      "http://localhost:5173",
+      "https://real-time-chat-psi-mauve.vercel.app",
+    ],
+    methods: ["GET", "POST"],
     credentials: true,
   },
 });
