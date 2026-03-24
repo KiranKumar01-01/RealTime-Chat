@@ -3,21 +3,7 @@
 A modern, full-stack **Real-Time Chat Application** built with scalable architecture and a beautiful UI.  
 It enables users to communicate instantly with **secure authentication, real-time messaging, and rich features**.
 
----
 
-## 🚀 Features
-
-- 🔐 Custom JWT Authentication (no third-party auth)
-- ⚡ Real-time Messaging using Socket.IO
-- 🟢 Online / Offline User Presence
-- 🔔 Notification Sounds (toggle supported)
-- 📨 Welcome Emails (Resend API)
-- 🗂️ Image Uploads (Cloudinary)
-- 🚦 API Rate Limiting (Arcjet)
-- 🎨 Modern UI (React + Tailwind + DaisyUI)
-- 🧠 Zustand State Management
-- 📱 Fully Responsive Design
-- 🧑‍💻 Clean Git Workflow (PRs, branches)
 
 ---
 
