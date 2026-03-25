@@ -3,14 +3,12 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { ENV } from "../lib/env.js";
-import cloudinary from   "../lib/cloudinary.js";
-
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body;
 
     try {
-
         // Check required fields
         if (!fullName || !email || !password) {
             return res.status(400).json({ message: "All fields are required" });
@@ -42,99 +40,108 @@ export const signup = async (req, res) => {
             email,
             password: hashedPassword
         });
-        if(newUser){
-        //     generateToken(newUser._id,res);
-        // await newUser.save();
 
-        const savedUser=await newUser.save();
-        generateToken(savedUser._id,res)
+        if (newUser) {
+            const savedUser = await newUser.save();
 
-        res.status(201).json({
-            _id: newUser._id,
-            fullName: newUser.fullName,
-            email: newUser.email,
-            profilePic: newUser.profilePic,
-        });
-        //send a welcome email to user
-        try{
-            await sendWelcomeEmail(savedUser.email,savedUser.fullName,ENV.CLIENT_URL)
-        }catch(error){
-            console.error("Failed to send welcome email:",email)
-        }
+            generateToken(savedUser._id, res);
 
-        }else{
-            res.status(400).json({message:"Invalid user data"})
+            res.status(201).json({
+                _id: savedUser._id,
+                fullName: savedUser.fullName,
+                email: savedUser.email,
+                profilePic: savedUser.profilePic,
+            });
+
+            // 🔥 FIX: resend workaround (NO 403 ERROR)
+            try {
+                const recipient =
+                    process.env.NODE_ENV === "development"
+                        ? "kirank75884@gmail.com"   // your email
+                        : savedUser.email;
+
+                await sendWelcomeEmail(
+                    recipient,
+                    savedUser.fullName,
+                    ENV.CLIENT_URL
+                );
+
+            } catch (error) {
+                console.error("Failed to send welcome email:", error.message);
+            }
+
+        } else {
+            res.status(400).json({ message: "Invalid user data" });
         }
 
     } catch (error) {
-        console.log("Error in Signup controller:", error);
+        console.error("Error in Signup controller:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
-export const login=async(req,res)=>{
-    const {email,password}=req.body
 
-    try{
-        const user=await User.findOne({email}) //check if already exists are not
-        if(!user)   return res.status(400).json({message:"Inavlid credentials"})
-        //never tell the client which one is incorrect:password or email
+// ================= LOGIN =================
+export const login = async (req, res) => {
+    const { email, password } = req.body;
 
-        //password
-        const isPasswordCorrect=await bcrypt.compare(password,user.password)
-        if(!isPasswordCorrect)  return res.status(400).json({message:"Invalid credentials"});
+    try {
+        const user = await User.findOne({ email });
 
-        generateToken(user._id,res)
+        if (!user)
+            return res.status(400).json({ message: "Invalid credentials" });
 
-         res.status(201).json({
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordCorrect)
+            return res.status(400).json({ message: "Invalid credentials" });
+
+        generateToken(user._id, res);
+
+        res.status(200).json({
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
             profilePic: user.profilePic,
         });
 
-    }catch(error){
-        console.error("Error in login controller:",error);
-        res.status(500).json({message:"Internal server error"});
-
+    } catch (error) {
+        console.error("Error in login controller:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
-export const logout=(_,res)=>{
-    res.cookie("jwt","",{maxAge:0})
-    res.status(200).json({messaage:"Logged out successfully"})
-}
 
+// ================= LOGOUT =================
+export const logout = (_, res) => {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged out successfully" });
+};
+
+
+// ================= UPDATE PROFILE =================
 export const updateProfile = async (req, res) => {
-  try {
-    const { profilePic } = req.body;
+    try {
+        const { profilePic } = req.body;
 
-    console.log("Profile pic received:", profilePic ? "YES" : "NO");
+        if (!profilePic) {
+            return res.status(400).json({ message: "Profile pic is required" });
+        }
 
-    if (!profilePic) {
-      return res.status(400).json({ message: "Profile pic is required" });
+        const userId = req.user._id;
+
+        const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePic: uploadResponse.secure_url },
+            { new: true }
+        );
+
+        res.status(200).json(updatedUser);
+
+    } catch (error) {
+        console.error("Error in update profile:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
-
-    const userId = req.user._id;
-    console.log("User ID:", userId);
-
-    // upload image to cloudinary
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
-    console.log("Cloudinary URL:", uploadResponse.secure_url);
-
-    // update user in database
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profilePic: uploadResponse.secure_url },
-      { new: true }
-    );
-
-    console.log("Updated user:", updatedUser);
-
-    res.status(200).json(updatedUser);
-
-  } catch (error) {
-    console.log("Error in update profile:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
 };
